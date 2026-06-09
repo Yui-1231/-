@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>集客導線 診断シート</title>
+<style>
+  :root {
+    --blue-50: #E6F1FB;
+    --blue-100: #B5D4F4;
+    --blue-200: #85B7EB;
+    --blue-400: #378ADD;
+    --blue-600: #185FA5;
+    --blue-800: #0C447C;
+    --blue-900: #042C53;
+    --gray-50: #F1EFE8;
+    --gray-100: #D3D1C7;
+    --gray-200: #B4B2A9;
+    --gray-400: #888780;
+    --gray-600: #5F5E5A;
+    --bg: #F7FBFF;
+    --white: #FFFFFF;
+    --text: #0C1F35;
+    --text-muted: #4A6580;
+    --border: rgba(23, 96, 165, 0.15);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.7;
+  }
+
+  .header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+    text-align: center;
+  }
+
+  .header-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--blue-600);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--blue-900);
+    line-height: 1.4;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  /* ─── SCREEN: TYPE SELECT ─── */
+  #screen-type .lead {
+    font-size: 15px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 28px;
+    line-height: 1.8;
+  }
+
+  .type-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  @media (max-width: 500px) {
+    .type-cards { grid-template-columns: 1fr; }
+  }
+
+  .type-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+    text-align: left;
+  }
+
+  .type-card:hover {
+    border-color: var(--blue-400);
+    transform: translateY(-2px);
+  }
+
+  .type-card .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--blue-600);
+    background: var(--blue-50);
+    border-radius: 4px;
+    padding: 3px 8px;
+    margin-bottom: 12px;
+  }
+
+  .type-card h2 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--blue-900);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+
+  .type-card p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ─── SCREEN: QUIZ ─── */
+  .progress-wrap {
+    margin-bottom: 28px;
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--blue-100);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--blue-400);
+    border-radius: 2px;
+    transition: width 0.35s ease;
+  }
+
+  .block-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--blue-600);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .block-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--blue-900);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .block-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+
+  .question-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 12px;
+  }
+
+  .question-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .opt-btn {
+    flex: 1;
+    min-width: 80px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    font-family: inherit;
+  }
+
+  .opt-btn:hover {
+    border-color: var(--blue-400);
+    color: var(--blue-600);
+    background: var(--blue-50);
+  }
+
+  .opt-btn.selected {
+    background: var(--blue-50);
+    border-color: var(--blue-400);
+    color: var(--blue-800);
+    font-weight: 600;
+  }
+
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+    gap: 12px;
+  }
+
+  .btn-back {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+
+  .btn-back:hover {
+    border-color: var(--gray-400);
+    color: var(--text);
+  }
+
+  .btn-next {
+    background: var(--blue-600);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 11px 28px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+    margin-left: auto;
+  }
+
+  .btn-next:hover { background: var(--blue-800); }
+  .btn-next:disabled { background: var(--gray-200); cursor: not-allowed; }
+
+  /* ─── SCREEN: RESULT ─── */
+  .score-hero {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .score-hero .score-num {
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--blue-800);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .score-hero .score-denom {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .result-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+
+  .result-badge.lv1 { background: #E8F5E9; color: #2E7D32; }
+  .result-badge.lv2 { background: #FFF8E1; color: #F57F17; }
+  .result-badge.lv3 { background: #FFF3E0; color: #E65100; }
+  .result-badge.lv4 { background: #FFEBEE; color: #B71C1C; }
+
+  .result-message {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.85;
+    text-align: left;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  .block-scores {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 500px) {
+    .block-scores { grid-template-columns: 1fr; }
+  }
+
+  .block-score-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+  }
+
+  .block-score-card .bs-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+
+  .block-score-card .bs-bar-wrap {
+    height: 5px;
+    background: var(--blue-100);
+    border-radius: 3px;
+    margin-bottom: 5px;
+    overflow: hidden;
+  }
+
+  .block-score-card .bs-bar {
+    height: 100%;
+    background: var(--blue-400);
+    border-radius: 3px;
+  }
+
+  .block-score-card .bs-num {
+    font-size: 12px;
+    color: var(--blue-600);
+    font-weight: 600;
+  }
+
+  .cta-card {
+    background: var(--blue-900);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .cta-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  .cta-card p {
+    font-size: 13px;
+    color: var(--blue-200);
+    margin-bottom: 20px;
+    line-height: 1.75;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--white);
+    color: var(--blue-900);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 13px 32px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: opacity 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .cta-btn:hover { opacity: 0.85; }
+
+  .retry-btn {
+    background: none;
+    border: none;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: inherit;
+    text-decoration: underline;
+    display: block;
+    margin: 0 auto;
+    padding: 8px;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ─── TYPE SELECT INTRO ─── */
+  .page-intro {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-top: 8px;
+  }
+
+  .page-intro h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue-900);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">ゆい｜講座ビジネスの売上改善ソウルメイト</div>
+  <h1>集客導線 診断シート</h1>
+</div>
+
+<div class="container">
+
+  <!-- ───────── SCREEN: TYPE SELECT ───────── -->
+  <div id="screen-type" class="screen active">
+    <div class="page-intro">
+      <h2>あなたはどちらに当てはまりますか？</h2>
+      <p class="lead">現在の状況に近い方を選んでください。<br>あなたの導線のどこに問題があるかが分かります。</p>
+    </div>
+    <div class="type-cards">
+      <div class="type-card" onclick="selectType('A')">
+        <div class="tag">タイプ A</div>
+        <h2>すでに集客の仕組みはある<br>でも売上が安定しない</h2>
+        <p>LPもLINEも導線もある。でも個別相談が安定しない、売上が読めない。</p>
+      </div>
+      <div class="type-card" onclick="selectType('B')">
+        <div class="tag">タイプ B</div>
+        <h2>これから集客の<br>仕組みを作りたい</h2>
+        <p>まだ導線がない、またはゼロから作り直したい。遠回りせずに進めたい。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───────── SCREEN: QUIZ ───────── -->
+  <div id="screen-quiz" class="screen">
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="progress-text">ブロック 1 / 4</span>
+        <span id="progress-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="block-label" id="block-label"></div>
+    <div class="block-title" id="block-title"></div>
+    <div class="block-desc" id="block-desc"></div>
+
+    <div id="questions-wrap"></div>
+
+    <div class="nav-row">
+      <button class="btn-back" id="btn-back" onclick="prevBlock()">← 戻る</button>
+      <button class="btn-next" id="btn-next" onclick="nextBlock()">次へ →</button>
+    </div>
+  </div>
+
+  <!-- ───────── SCREEN: RESULT ───────── -->
+  <div id="screen-result" class="screen">
+    <div class="score-hero">
+      <div class="score-num" id="result-score"></div>
+      <div class="score-denom" id="result-denom"></div>
+      <div class="result-badge" id="result-badge"></div>
+      <div class="result-message" id="result-message"></div>
+    </div>
+
+    <div class="block-scores" id="block-scores-wrap"></div>
+
+    <div class="cta-card" id="cta-card"></div>
+
+    <button class="retry-btn" onclick="restart()">最初からやり直す</button>
+  </div>
+
+</div>
+
+<script>
+const DATA = {
+  A: {
+    title: "売れない導線チェック診断",
+    blocks: [
+      {
+        label: "ブロック 1",
+        title: "集客の入口（広告・SNS）の状態",
+        desc: "",
+        max: 8,
+        questions: [
+          { text: "広告またはSNSで「誰に届けたいか」が明確になっている", max: 2 },
+          { text: "広告またはSNSで伝えているメッセージと、LPで伝えている内容が一致している", max: 2 },
+          { text: "広告またはSNSからLPに来た人の数を把握している", max: 2 },
+          { text: "広告またはSNSで伝えることを、1つのテーマに絞っている", max: 2 },
+        ]
+      },
+      {
+        label: "ブロック 2",
+        title: "LP（申込・登録ページ）の状態",
+        desc: "",
+        max: 10,
+        questions: [
+          { text: "LPのゴールが「LINE登録」または「個別相談への申込」の1つだけに絞られている", max: 2 },
+          { text: "LPに「商品の特徴の説明」より「今の自分にこれが必要な理由」が多く書かれている", max: 2 },
+          { text: "LPを見た人が迷わず次の行動（登録・申込）に進める、シンプルな構成になっている", max: 2 },
+          { text: "LPを見た人のうち何人がLINE登録または申込まで進んだかを把握している", max: 2 },
+          { text: "LPの文章を見直したことがあり、その根拠（数字や反応）がある", max: 2 },
+        ]
+      },
+      {
+        label: "ブロック 3",
+        title: "LINE配信の状態",
+        desc: "LINEに登録した人が、個別相談に申し込みたくなるまでの「理解の流れ」が設計されているかを確認するブロックです。",
+        max: 12,
+        questions: [
+          { text: "LINE配信が「今悩んでいる→なぜうまくいかないのか→何を変えれば良いか」の順番で設計されている", max: 3 },
+          { text: "LINE配信の内容が、自分の商品コンセプトに沿って設計されている", max: 3 },
+          { text: "LINE登録者のうち、何人が個別相談に申し込んだかを把握している", max: 2 },
+          { text: "個別相談に来る人が「ある程度理解した状態・前向きな状態」で来ることが多い", max: 2 },
+          { text: "LINE配信を最後まで読んでいる人がどのくらいいるか把握している", max: 2 },
+        ]
+      },
+      {
+        label: "ブロック 4",
+        title: "商品コンセプトの状態",
+        desc: "ここが全体の根幹です。商品コンセプトがズレていると、LP・LINE・広告をどれだけ直しても売上は安定しません。",
+        max: 10,
+        questions: [
+          { text: "「誰に向けた商品か」「受ける前後でお客様の何がどう変わるか」「どのように提供するか」がそれぞれ言葉にできている", max: 3 },
+          { text: "「なぜうまくいっていないのか」の原因を、お客様自身がまだ気づいていない言葉で説明できる", max: 3 },
+          { text: "商品コンセプトとLP・LINEで使っている言葉が一致している", max: 2 },
+          { text: "商品コンセプトを見直したことがあり、見直した根拠がある", max: 2 },
+        ]
+      }
+    ],
+    levels: [
+      { min: 32, badge: "lv1", label: "設計は整っています", message: "全体の設計は整っています。ただし、1つでも「0点のブロック」があれば、そこで流れが止まっています。どこかを特定して精度を上げることが次のステップです。" },
+      { min: 20, badge: "lv2", label: "複数箇所で詰まりあり", message: "複数のブロックで詰まりが起きている状態です。部分だけを直し続けても売上が変わらないのは、この状態が原因であることが多いです。" },
+      { min: 10, badge: "lv3", label: "流れ全体がつながっていない", message: "今、自分で売上を追いかけ続けているのは必然の状態です。流れ全体がつながっていないため、どこか1箇所を直しても改善しにくい構造になっています。" },
+      { min: 0,  badge: "lv4", label: "商品コンセプトの確認が先決", message: "導線として機能していない可能性が高いです。LP・LINEより先に、商品コンセプトを確認することから始める必要があります。" },
+    ]
+  },
+  B: {
+    title: "集客の仕組み化 準備度診断",
+    blocks: [
+      {
+        label: "ブロック 1",
+        title: "商品コンセプトの言語化",
+        desc: "",
+        max: 10,
+        questions: [
+          { text: "「誰に向けた商品か」「受ける前後でお客様の何がどう変わるか」「どのように提供するか」がそれぞれ言葉にできている", max: 3 },
+          { text: "お客様が「うまくいっていない本当の原因」を、お客様自身はまだ気づいていないが、自分は説明できる", max: 3 },
+          { text: "商品を受けた後に、お客様の生活・状態がどう変わるかを具体的に言葉にできる", max: 2 },
+          { text: "他の似た商品と比べて「なぜ自分の商品か」の理由が1つ以上ある", max: 2 },
+        ]
+      },
+      {
+        label: "ブロック 2",
+        title: "個別相談への教育設計の準備",
+        desc: "LINEや動画で、お客様が「個別相談に申し込みたい」と思えるまでの理解の流れをあらかじめ設計しておくことが、仕組み化の核心です。このブロックはその準備ができているかを確認します。",
+        max: 10,
+        questions: [
+          { text: "個別相談に来る前にお客様に「理解しておいてほしいこと」を3つ以上書き出せる", max: 3 },
+          { text: "「今悩んでいる→なぜうまくいかないのか→何を変えれば良いか」の順でお客様に伝えるストーリーが組み立てられている", max: 3 },
+          { text: "そのストーリーを動画・LINEメッセージ・セミナーなどで伝えたことがある", max: 2 },
+          { text: "過去にセミナーや説明会を通じて成約した経験がある", max: 2 },
+        ]
+      },
+      {
+        label: "ブロック 3",
+        title: "個別相談・LP・導線の準備",
+        desc: "",
+        max: 10,
+        questions: [
+          { text: "個別相談でお客様に説明するための資料（スライドや説明シートなど）がある", max: 3 },
+          { text: "LPのゴールが「すぐに商品を買う」ではなく「無料個別セッション」や「無料WEBセミナー」への申込になっている、またはそのように設計するつもりでいる", max: 3 },
+          { text: "LINE公式アカウントがある、またはすぐ開設できる状態にある", max: 2 },
+          { text: "LPに書く「登録・申込すべき理由」が1文で言える", max: 2 },
+        ]
+      },
+      {
+        label: "ブロック 4",
+        title: "広告・集客の前提",
+        desc: "",
+        max: 10,
+        questions: [
+          { text: "広告を使わずに（SNS・紹介・口コミなど）成約した経験が6件以上ある", max: 3 },
+          { text: "成約したお客様に共通する特徴（悩み・状況・きっかけ）が分かっている", max: 3 },
+          { text: "月の広告予算が決まっている、または確保できる見込みがある", max: 2 },
+          { text: "月に何件の個別相談から何件の成約が必要かを逆算できている", max: 2 },
+        ]
+      }
+    ],
+    levels: [
+      { min: 32, badge: "lv1", label: "仕組み化の土台は整っています", message: "仕組み化の土台は整っています。あとは正しい順番で実装するだけです。順番を間違えると広告費が無駄になりやすいため、設計の確認をしてから進むことをおすすめします。" },
+      { min: 20, badge: "lv2", label: "今すぐ広告を出すのは早い状態", message: "今すぐ広告を出すには早い状態です。ただし土台は一部できています。何を先に整えれば良いかを明確にすることで、遠回りを防げます。" },
+      { min: 10, badge: "lv3", label: "LP・広告から作るのは危険な段階", message: "この状態でLPや広告から作り始めると、形だけ整って売上が立たないという状態になりやすいです。商品コンセプトと、個別相談に向けた教育の流れを先に整えることが優先です。" },
+      { min: 0,  badge: "lv4", label: "まず話しましょう", message: "今の状態で仕組み化を始めると、作るだけ作って売上につながらないリスクが高い状態です。何から始めれば良いかを一緒に整理することが、最初の一歩です。" },
+    ]
+  }
+};
+
+const OPTS = [
+  { label: "できていない", val: 0 },
+  { label: "少しできている", val: 1 },
+  { label: "だいたいできている", val: 2 },
+];
+
+// special: some questions have max 3
+function getOpts(maxPts) {
+  if (maxPts === 2) return [
+    { label: "できていない", val: 0 },
+    { label: "だいたいできている", val: 1 },
+    { label: "できている", val: 2 },
+  ];
+  return [
+    { label: "できていない", val: 0 },
+    { label: "少しできている", val: 1 },
+    { label: "だいたいできている", val: 2 },
+    { label: "できている", val: 3 },
+  ];
+}
+
+let currentType = null;
+let currentBlock = 0;
+let answers = []; // answers[blockIdx][qIdx] = value
+
+function selectType(type) {
+  currentType = type;
+  currentBlock = 0;
+  const totalBlocks = DATA[type].blocks.length;
+  answers = DATA[type].blocks.map(b => b.questions.map(() => null));
+  showBlock(0);
+  showScreen('screen-quiz');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showBlock(idx) {
+  const d = DATA[currentType];
+  const block = d.blocks[idx];
+  currentBlock = idx;
+
+  // progress
+  const pct = Math.round((idx / d.blocks.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `ブロック ${idx + 1} / ${d.blocks.length}`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+
+  document.getElementById('block-label').textContent = block.label;
+  document.getElementById('block-title').textContent = block.title;
+  document.getElementById('block-desc').textContent = block.desc;
+
+  // questions
+  const wrap = document.getElementById('questions-wrap');
+  wrap.innerHTML = '';
+  block.questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    const opts = getOpts(q.max);
+    card.innerHTML = `
+      <div class="question-text">${qi + 1}. ${q.text}</div>
+      <div class="options" id="opts-${idx}-${qi}">
+        ${opts.map(o => `<button class="opt-btn${answers[idx][qi] === o.val ? ' selected' : ''}" onclick="selectOpt(${idx},${qi},${o.val},this)">${o.label}</button>`).join('')}
+      </div>`;
+    wrap.appendChild(card);
+  });
+
+  // back button
+  document.getElementById('btn-back').style.visibility = idx === 0 ? 'hidden' : 'visible';
+
+  // next button label
+  const isLast = idx === d.blocks.length - 1;
+  document.getElementById('btn-next').textContent = isLast ? '結果を見る' : '次へ →';
+  updateNextBtn();
+}
+
+function selectOpt(blockIdx, qIdx, val, el) {
+  answers[blockIdx][qIdx] = val;
+  const opts = document.querySelectorAll(`#opts-${blockIdx}-${qIdx} .opt-btn`);
+  opts.forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  updateNextBtn();
+}
+
+function updateNextBtn() {
+  const block = DATA[currentType].blocks[currentBlock];
+  const allAnswered = block.questions.every((_, qi) => answers[currentBlock][qi] !== null);
+  document.getElementById('btn-next').disabled = !allAnswered;
+}
+
+function nextBlock() {
+  const d = DATA[currentType];
+  if (currentBlock < d.blocks.length - 1) {
+    showBlock(currentBlock + 1);
+  } else {
+    showResult();
+  }
+}
+
+function prevBlock() {
+  if (currentBlock > 0) showBlock(currentBlock - 1);
+}
+
+function showResult() {
+  const d = DATA[currentType];
+  let total = 0;
+  let maxTotal = 0;
+  const blockScores = d.blocks.map((block, bi) => {
+    let bs = 0;
+    block.questions.forEach((q, qi) => {
+      bs += answers[bi][qi] || 0;
+    });
+    total += bs;
+    maxTotal += block.max;
+    return { label: block.title, score: bs, max: block.max };
+  });
+
+  document.getElementById('result-score').textContent = total;
+  document.getElementById('result-denom').textContent = `/ ${maxTotal} 点`;
+
+  const level = d.levels.find(l => total >= l.min);
+  const badge = document.getElementById('result-badge');
+  badge.textContent = level.label;
+  badge.className = 'result-badge ' + level.badge;
+  document.getElementById('result-message').textContent = level.message;
+
+  // block score bars
+  const bsWrap = document.getElementById('block-scores-wrap');
+  bsWrap.innerHTML = blockScores.map(bs => {
+    const pct = Math.round((bs.score / bs.max) * 100);
+    return `<div class="block-score-card">
+      <div class="bs-label">${bs.label}</div>
+      <div class="bs-bar-wrap"><div class="bs-bar" style="width:${pct}%"></div></div>
+      <div class="bs-num">${bs.score} / ${bs.max} 点</div>
+    </div>`;
+  }).join('');
+
+  // CTA カード（タイプ別）
+  const ctaCard = document.getElementById('cta-card');
+  if (currentType === 'A') {
+    ctaCard.innerHTML = `
+      <h3>スコアに関わらず、どこが止まっているかは<br>外から見ると分かるものです。</h3>
+      <p>60分の無料個別セッションで、今の導線を一緒に見ながら<br>何を先に整えるべきかを整理します。</p>
+      <p style="font-size:13px; color:var(--blue-200); margin-top:6px; margin-bottom:0;">毎月5名限定の無料の個別セッションにお申込みください</p>`;
+  } else {
+    ctaCard.innerHTML = `
+      <h3>スコアに関わらず、今の状態から<br>何を先に整えるべきかを一緒に整理します。</h3>
+      <p>60分の無料個別セッションで、あなたの商品と現状をお聞きしながら<br>遠回りしない進め方を一緒に考えます。</p>
+      <p style="font-size:13px; color:var(--blue-200); margin-top:6px; margin-bottom:0;">毎月5名限定の無料の個別セッションにお申込みください</p>`;
+  }
+
+  showScreen('screen-result');
+}
+
+function restart() {
+  currentType = null;
+  currentBlock = 0;
+  answers = [];
+  showScreen('screen-type');
+}
+</script>
+</body>
+</html>
